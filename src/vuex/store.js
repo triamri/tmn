@@ -11,8 +11,10 @@ const store = new Vuex.Store({
   state: {
     rooms: [],
     players: [],
-    demage: 50,
-    player: ''
+    demage: 0,
+    player: '',
+    dataLogin: {},
+    isLogin: false
   },
   mutations: {
     saveRoom (state, payload) {
@@ -26,10 +28,17 @@ const store = new Vuex.Store({
     },
     getDemage (state) {
       state.demage += 1
+    },
+    getLogin (state, payload) {
+      state.dataLogin = payload
+    },
+    setLogin (state, payload) {
+      state.isLogin = payload
     }
   },
   actions: {
     getRooms ({ commit }, payload) {
+      console.log(payload)
       let starCountRef = firebase.database().ref('rooms')
       let returnArr = []
       starCountRef.on('value', (snapshot) => {
@@ -65,7 +74,7 @@ const store = new Vuex.Store({
       firebase.database().ref('rooms/').push(payload)
       .then((respone) => {
         const getUserLocal = JSON.parse(localStorage.getItem('firebase'))
-        getUserLocal.touch = 50
+        getUserLocal.touch = 0
         getUserLocal.player = 'ts'
         firebase.database().ref('rooms/' + respone.key + '/user').child(getUserLocal.id).set(getUserLocal)
       })
@@ -74,7 +83,7 @@ const store = new Vuex.Store({
     },
     addPlayer ({ commit }, payload) {
       const getUserLocal = JSON.parse(localStorage.getItem('firebase'))
-      getUserLocal.touch = 50
+      getUserLocal.touch = 0
       getUserLocal.player = 'ps'
       firebase.database().ref('rooms/' + payload + '/user').child(getUserLocal.id).set(getUserLocal)
     },
@@ -84,6 +93,31 @@ const store = new Vuex.Store({
       getUserLocal.player = 'ps'
       firebase.database().ref('rooms/' + payload.key + '/user/' + payload.id).update(getUserLocal)
       commit('getDemage')
+    },
+    loginPlayer ({ commit }) {
+      return new Promise((resolve, reject) => {
+        const provider = new firebase.auth.GoogleAuthProvider()
+        provider.addScope('profile')
+        provider.addScope('email')
+        firebase.auth().signInWithPopup(provider)
+        .then((resultData) => {
+          const dataUser = {
+            id: resultData.user.uid,
+            name: resultData.user.displayName,
+            image: resultData.user.photoURL
+          }
+          const jsonString = JSON.stringify(dataUser)
+          localStorage.setItem('firebase', jsonString)
+          commit('getLogin', dataUser)
+          resolve()
+        })
+        .catch(err => console.log(err))
+      })
+    },
+    CheckLogin ({ commit }) {
+      if (localStorage.getItem('firebase')) {
+        commit('setLogin', true)
+      }
     }
   }
 })

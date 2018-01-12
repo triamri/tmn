@@ -33,19 +33,26 @@ import { mapActions, mapState } from 'vuex'
 export default {
   computed: {
     ...mapState([
-      'rooms'
+      'rooms',
+      'isLogin'
     ])
   },
   methods: {
     ...mapActions([
-      'getRooms'
+      'getRooms',
+      'CheckLogin'
     ]),
     addRooms () {
       this.$router.push('/add-rooms')
     }
   },
   created () {
-    this.getRooms()
+    this.CheckLogin()
+    if (!this.isLogin) {
+      this.$router.push('/')
+    } else {
+      this.getRooms()
+    }
   }
 }
 </script>

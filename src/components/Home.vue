@@ -15,7 +15,17 @@
         <v-flex xs12 class="text-xs-center" style="color:white">
           <div class="centered">
             <h2>{{numClick}}</h2>
+            <h2>{{winner.name}}</h2>
+            <h4>You Winn !!!</h4>
             <h1>Play Again</h1>
+            <div class="text-xs-center">
+              <v-btn fab dark large color="primary" @click="logout">
+                <v-icon dark>remove</v-icon>
+              </v-btn>
+              <v-btn fab dark large color="pink" @click="next">
+                <v-icon dark>favorite</v-icon>
+              </v-btn>
+            </div>
           </div>
         </v-flex>
       </v-layout>
@@ -29,7 +39,7 @@
           </div>
         </v-flex>
         <v-flex xs12>
-          <div class="text-xs-center" id="fixed">
+          <div class="text-xs-center" id="fixed" >
             <v-btn v-show="btnStart" color="orange" id="btn-start" dark @click="start"><h1>Start</h1></v-btn>
             <v-btn :color="newColor" light id="btn-touch" @click="countClick" v-show="touch"><h3>Touch Here</h3></v-btn>
             <h2> You have <b>{{ time }}</b> secs left </h2>
@@ -37,7 +47,7 @@
         </v-flex>
         <v-flex xs6 class="text-xs-left">
           <div id="fixed" style="padding: 0 10px;">
-            <p>Name: </p>
+            <p>Name: {{name}}</p>
           </div>
         </v-flex>
         <v-flex xs6 class="text-xs-right">
@@ -51,6 +61,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -64,7 +75,14 @@ export default {
       startPlay: false,
       btnStart: true,
       touch: false,
-      countDown: 3
+      countDown: 3,
+      name: JSON.parse(localStorage.getItem('firebase')).name,
+      setData: {
+        id: JSON.parse(localStorage.getItem('firebase')).id,
+        key: this.$route.params.id
+      },
+      player: {},
+      winner: {}
     }
   },
   mounted () {
@@ -76,11 +94,32 @@ export default {
           self.active = false
           self.show = false
           self.hide = true
+          for(let i = 1; i <= this.players.length; i++ ){
+            if (this.players[i].touch > this.players[0].touch){
+              console.log(this.players[i])
+              this.winner = this.players[i]
+            }
+          }
         }
       }
     }, 1000)
   },
+  // watch: {
+  //   player: function () {
+  //     this.getPlayers(this.setData)
+  //     this.players.forEach(player => {
+  //       if (player.id == this.setData.id) {
+  //         this.player = player
+  //       }
+  //     });
+  //   }
+  // },
   methods: {
+    ...mapActions([
+      'CheckLogin',
+      'addTouch',
+      'getPlayers'
+    ]),
     start () {
       let self = this
       self.startPlay = true
@@ -95,13 +134,48 @@ export default {
       }, 1000)
     },
     countClick () {
-      this.numClick += 1
-      if (this.active === false) {
+      console.log(this.setData)
+      this.addTouch(this.setData)
+      
+      // this.numClick = this.player.touch 
+      console.log(this.demage)
+      this.numClick = this.demage
+      if (this.active === false){
         this.active = true
       }
-
       let color = this.colors[Math.round(Math.random() * (this.colors.length - 1))]
       this.newColor = color
+    },
+    logout () {
+      localStorage.clear()
+      this.$router.push('/')
+
+    },
+    next () {
+      this.$router.push('/rooms')
+    }
+  },
+  computed: {
+    ...mapState([
+      'dataLogin',
+      'isLogin',
+      'players',
+      'demage'
+    ])
+  },
+  created () {
+
+    this.CheckLogin()
+    if (!this.isLogin) {
+      this.$router.push('/')
+    }
+    else {
+      this.getPlayers(this.setData)
+      this.players.forEach(player => {
+        if (player.id == this.setData.id) {
+          this.player = player
+        }
+      });
     }
   }
 }

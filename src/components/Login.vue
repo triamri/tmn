@@ -5,7 +5,7 @@
         <v-content>
           <v-layout>
             <v-flex xs12 class="text-xs-center" style="color:white">
-              <v-btn id="btn-login" dark>
+              <v-btn id="btn-login" dark @click="loginBtn" >
                 <h3>Click to Login</h3>
               </v-btn>
             </v-flex>
@@ -17,8 +17,31 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
-
+  methods: {
+    ...mapActions([
+      'loginPlayer',
+      'CheckLogin'
+    ]),
+    loginBtn () {
+      this.loginPlayer()
+      .then(() => {
+        this.$router.push({name: 'Rooms'})
+      })
+    }
+  },
+  computed: {
+    ...mapState([
+      'isLogin'
+    ])
+  },
+  created () {
+    this.CheckLogin()
+    if (this.isLogin) {
+      this.$router.push('/rooms')
+    }
+  }
 }
 </script>
 

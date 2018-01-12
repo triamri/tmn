@@ -10,37 +10,52 @@
         </v-flex>
       </v-layout>
     </v-content>
-    <v-content>
+    <v-content v-if="lengthUser < 2">
       <v-layout row wrap color="blue" style="position: fixed; bottom: 20%; width: 100%;">
-        <v-flex xs12>
+        <v-flex xs12 v-if="!play">
           <div class="text-xs-center" id="fixed">
             <v-btn :color="newColor" light id="btn-touch" @click="addPlayer($route.params.id)" ><h3>Join Room</h3></v-btn>
           </div>
         </v-flex>
-        <v-flex xs12>
+        <v-flex xs12 v-else>
           <div class="text-xs-center" id="fixed">
             <v-btn :color="newColor" light id="btn-touch" @click="getStarter" ><h3>Mulai Permainan</h3></v-btn>
           </div>
         </v-flex>
       </v-layout>
     </v-content>
+    <v-content v-else style="text-align: center;">
+      Maaf Room Penuh
+    </v-content>
+
   </div>
 </template>
 <script>
 import firebase from 'firebase'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
       formData: {
         nameRoom: ''
-      }
+      },
+      setData: {
+        id: JSON.parse(localStorage.getItem('firebase')).id,
+        key: this.$route.params.id
+      },
+      lengthUser: 0,
+      play: false
     }
   },
   methods: {
-    ...mapActions([
-      'addPlayer'
+    ...mapActions ([
+      'addPlayer',
+      'getPlayers'
     ]),
+    getDataUser () {
+      // this.addPlayer(this.$route.params.id)
+      this.getPlayers(this.setData)
+    },
     getRoom () {
       let starCountRef = firebase.database().ref('rooms/' + this.$route.params.id)
       starCountRef.on('value', (snapshot) => {
@@ -48,11 +63,20 @@ export default {
       })
     },
     getStarter () {
-      this.$router.push({ name: 'Touch', params: { id: this.$route.params.id } })
+      this.$router.push({ name: 'Home', params: { id: this.$route.params.id } })
+    },
+    onJoin () {
+      this.play = true
     }
   },
   created () {
     this.getRoom()
+    this.lengthUser = this.players.length + 1
+  },
+  computed: {
+    ...mapState([
+      'players'
+    ])
   }
 }
 </script>
