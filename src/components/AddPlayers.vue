@@ -28,7 +28,7 @@
 </template>
 <script>
 import firebase from 'firebase'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -38,22 +38,17 @@ export default {
       setData: {
         id: JSON.parse(localStorage.getItem('firebase')).id,
         key: this.$route.params.id
-      },
-      teamBlue: [],
-      teamRed : []
+      }
     }
   },
   methods: {
-    ...mapActions([
+    ...mapActions ([
       'addPlayer',
       'getPlayers'
     ]),
     getDataUser () {
       // this.addPlayer(this.$route.params.id)
       this.getPlayers(this.setData)
-      let length = this.players.length + 1
-      let random  = Math.floor(Math.random() * (length - 1) )
-
     },
     getRoom () {
       let starCountRef = firebase.database().ref('rooms/' + this.$route.params.id)

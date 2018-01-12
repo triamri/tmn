@@ -7,11 +7,11 @@
             <v-form>
               <v-text-field
                 label="Name Rooms"
-                v-model="nameRoom"
+                v-model="formData.nameRoom"
                 required
               ></v-text-field>
               <v-btn
-                @click="submitRoom(formData)"
+                @click=""
               >
                 Submit
               </v-btn>
@@ -37,7 +37,11 @@ export default {
   methods: {
     ...mapActions([
       'submitRoom'
-    ])
+    ]),
+    submitBtn () {
+      this.submitRoom(this.formData)
+      this.$router.push({name: 'Rooms'})
+    }
   }
 
 }

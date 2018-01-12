@@ -18,7 +18,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/play',
+      path: '/play/:id',
       name: 'Home',
       component: Home
     },

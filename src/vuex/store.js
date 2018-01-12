@@ -11,7 +11,7 @@ const store = new Vuex.Store({
   state: {
     rooms: [],
     players: [],
-    demage: 50,
+    demage: 0,
     player: '',
     dataLogin: {},
     isLogin: false
@@ -38,6 +38,7 @@ const store = new Vuex.Store({
   },
   actions: {
     getRooms ({ commit }, payload) {
+      console.log(payload)
       let starCountRef = firebase.database().ref('rooms')
       let returnArr = []
       starCountRef.on('value', (snapshot) => {
@@ -73,7 +74,7 @@ const store = new Vuex.Store({
       firebase.database().ref('rooms/').push(payload)
       .then((respone) => {
         const getUserLocal = JSON.parse(localStorage.getItem('firebase'))
-        getUserLocal.touch = 50
+        getUserLocal.touch = 0
         getUserLocal.player = 'ts'
         firebase.database().ref('rooms/' + respone.key + '/user').child(getUserLocal.id).set(getUserLocal)
       })
@@ -82,7 +83,7 @@ const store = new Vuex.Store({
     },
     addPlayer ({ commit }, payload) {
       const getUserLocal = JSON.parse(localStorage.getItem('firebase'))
-      getUserLocal.touch = 50
+      getUserLocal.touch = 0
       getUserLocal.player = 'ps'
       firebase.database().ref('rooms/' + payload + '/user').child(getUserLocal.id).set(getUserLocal)
     },

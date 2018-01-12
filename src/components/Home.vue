@@ -37,7 +37,7 @@
           </div>
         </v-flex>
         <v-flex xs12>
-          <div class="text-xs-center" id="fixed">
+          <div class="text-xs-center" id="fixed" >
             <v-btn v-show="btnStart" color="orange" id="btn-start" dark @click="start"><h1>Start</h1></v-btn>
             <v-btn :color="newColor" light id="btn-touch" @click="countClick" v-show="touch"><h3>Touch Here</h3></v-btn>
             <h2> You have <b>{{ time }}</b> secs left </h2>
@@ -45,7 +45,7 @@
         </v-flex>
         <v-flex xs6 class="text-xs-left">
           <div id="fixed" style="padding: 0 10px;">
-            <p>Name: {{dataLogin.name}}</p>
+            <p>Name: {{name}}</p>
           </div>
         </v-flex>
         <v-flex xs6 class="text-xs-right">
@@ -73,7 +73,13 @@ export default {
       startPlay: false,
       btnStart: true,
       touch: false,
-      countDown: 3
+      countDown: 3,
+      name: JSON.parse(localStorage.getItem('firebase')).name,
+      setData: {
+        id: JSON.parse(localStorage.getItem('firebase')).id,
+        key: this.$route.params.id
+      },
+      player: {}
     }
   },
   mounted () {
@@ -89,9 +95,21 @@ export default {
       }
     }, 1000)
   },
+  // watch: {
+  //   player: function () {
+  //     this.getPlayers(this.setData)
+  //     this.players.forEach(player => {
+  //       if (player.id == this.setData.id) {
+  //         this.player = player
+  //       }
+  //     });
+  //   }
+  // },
   methods: {
     ...mapActions([
-      'CheckLogin'
+      'CheckLogin',
+      'addTouch',
+      'getPlayers'
     ]),
     start () {
       let self = this
@@ -107,11 +125,17 @@ export default {
       }, 1000)
     },
     countClick () {
-      this.numClick += 1
-      if (this.active === false) {
+      // this.addTouch(this.setData)
+      // this.players.forEach(player => {
+      //   if (player.id == this.setData.id) {
+      //     this.player = player
+      //   }
+      // })
+      // this.numClick = this.player.touch 
+      // console.log(this.numClick)
+      if (this.active === false){
         this.active = true
       }
-
       let color = this.colors[Math.round(Math.random() * (this.colors.length - 1))]
       this.newColor = color
     },
@@ -127,13 +151,23 @@ export default {
   computed: {
     ...mapState([
       'dataLogin',
-      'isLogin'
+      'isLogin',
+      'players'
     ])
   },
   created () {
+
     this.CheckLogin()
     if (!this.isLogin) {
       this.$router.push('/')
+    }
+    else {
+      this.getPlayers(this.setData)
+      this.players.forEach(player => {
+        if (player.id == this.setData.id) {
+          this.player = player
+        }
+      });
     }
   }
 }

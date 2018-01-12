@@ -38,8 +38,8 @@ export default {
   },
   created () {
     this.CheckLogin()
-    if (!this.isLogin) {
-      this.$router.push('/')
+    if (this.isLogin) {
+      this.$router.push('/rooms')
     }
   }
 }
