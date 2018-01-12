@@ -4,6 +4,7 @@
       <v-layout>
         <v-flex xs12 class="text-xs-center" style="color:white">
           <div class="centered">
+            <h2>Ready In ...</h2>
             <h1 >{{countDown}}</h1>
           </div>
         </v-flex>
@@ -29,8 +30,8 @@
         </v-flex>
         <v-flex xs12>
           <div class="text-xs-center" id="fixed">
-            <v-btn v-show="btnStart" color="orange" id="btn-start" dark @click="start">Start</v-btn>
-            <v-btn :color="newColor" light id="btn-touch" @click="countClick" v-show="touch">Touch Here</v-btn>
+            <v-btn v-show="btnStart" color="orange" id="btn-start" dark @click="start"><h1>Start</h1></v-btn>
+            <v-btn :color="newColor" light id="btn-touch" @click="countClick" v-show="touch"><h3>Touch Here</h3></v-btn>
             <h2> You have <b>{{ time }}</b> secs left </h2>
           </div>
         </v-flex>
@@ -70,10 +71,8 @@ export default {
     let self = this
     setInterval(function () {
       if (self.active === true) {
-        console.log(self.time)
         self.time--
         if (self.time === 0) {
-          console.log('HAPPY NEW YEAR!!')
           self.active = false
           self.show = false
           self.hide = true
@@ -83,14 +82,11 @@ export default {
   },
   methods: {
     start () {
-      // console.log('masuk')
       let self = this
       self.startPlay = true
       setInterval(function () {
-        console.log(self.countDown)
         self.countDown--
         if (self.countDown === 0) {
-          console.log('"HAPPY NEW YEAR!!"')
           self.startPlay = false
           self.btnStart = false
           self.touch = true
@@ -99,8 +95,6 @@ export default {
       }, 1000)
     },
     countClick () {
-      // let random = Math.random()
-      // console.log(random)
       this.numClick += 1
       if (this.active === false) {
         this.active = true

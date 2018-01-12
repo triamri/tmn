@@ -26,11 +26,11 @@ export default {
     let self = this
     setInterval(function () {
       if (self.show === true) {
-        console.log(self.time)
         self.time--
         if (self.time === 0) {
-          console.log('HAPPY NEW YEAR!!')
+          console.log('masuk')
           self.show = false
+          // self.$router.push('/login')
         }
       }
     }, 1000)
