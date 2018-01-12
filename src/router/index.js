@@ -5,6 +5,7 @@ import Login from '@/components/Login'
 import AddPlayers from '@/components/AddPlayers'
 import RoomPlayers from '@/components/RoomPlayers'
 import GetTouch from '@/components/GetTouch'
+import AddRooms from '@/components/AddRooms'
 
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/rooms',
       name: 'Rooms',
       component: RoomPlayers
+    },
+    {
+      path: '/add-rooms',
+      name: 'AddRooms',
+      component: AddRooms
     }
   ]
 })
