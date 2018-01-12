@@ -29,6 +29,7 @@ export default {
         self.time--
         if (self.time === 0) {
           self.show = false
+          // self.$router.push('/login')
         }
       }
     }, 1000)
