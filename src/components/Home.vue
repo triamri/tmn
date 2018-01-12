@@ -16,6 +16,14 @@
           <div class="centered">
             <h2>{{numClick}}</h2>
             <h1>Play Again</h1>
+            <div class="text-xs-center">
+              <v-btn fab dark large color="primary" @click="logout">
+                <v-icon dark>remove</v-icon>
+              </v-btn>
+              <v-btn fab dark large color="pink" @click="next">
+                <v-icon dark>favorite</v-icon>
+              </v-btn>
+            </div>
           </div>
         </v-flex>
       </v-layout>
@@ -37,7 +45,7 @@
         </v-flex>
         <v-flex xs6 class="text-xs-left">
           <div id="fixed" style="padding: 0 10px;">
-            <p>Name: </p>
+            <p>Name: {{dataLogin.name}}</p>
           </div>
         </v-flex>
         <v-flex xs6 class="text-xs-right">
@@ -51,6 +59,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -81,6 +90,9 @@ export default {
     }, 1000)
   },
   methods: {
+    ...mapActions([
+      'CheckLogin'
+    ]),
     start () {
       let self = this
       self.startPlay = true
@@ -102,6 +114,26 @@ export default {
 
       let color = this.colors[Math.round(Math.random() * (this.colors.length - 1))]
       this.newColor = color
+    },
+    logout () {
+      localStorage.clear()
+      this.$router.push('/')
+
+    },
+    next () {
+      this.$router.push('/rooms')
+    }
+  },
+  computed: {
+    ...mapState([
+      'dataLogin',
+      'isLogin'
+    ])
+  },
+  created () {
+    this.CheckLogin()
+    if (!this.isLogin) {
+      this.$router.push('/')
     }
   }
 }

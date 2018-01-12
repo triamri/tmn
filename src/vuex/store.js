@@ -12,7 +12,9 @@ const store = new Vuex.Store({
     rooms: [],
     players: [],
     demage: 50,
-    player: ''
+    player: '',
+    dataLogin: {},
+    isLogin: false
   },
   mutations: {
     saveRoom (state, payload) {
@@ -26,6 +28,12 @@ const store = new Vuex.Store({
     },
     getDemage (state) {
       state.demage += 1
+    },
+    getLogin (state, payload) {
+      state.dataLogin = payload
+    },
+    setLogin (state, payload) {
+      state.isLogin = payload
     }
   },
   actions: {
@@ -84,6 +92,31 @@ const store = new Vuex.Store({
       getUserLocal.player = 'ps'
       firebase.database().ref('rooms/' + payload.key + '/user/' + payload.id).update(getUserLocal)
       commit('getDemage')
+    },
+    loginPlayer ({ commit }) {
+      return new Promise((resolve, reject) => {
+        const provider = new firebase.auth.GoogleAuthProvider()
+        provider.addScope('profile')
+        provider.addScope('email')
+        firebase.auth().signInWithPopup(provider)
+        .then((resultData) => {
+          const dataUser = {
+            id: resultData.user.uid,
+            name: resultData.user.displayName,
+            image: resultData.user.photoURL
+          }
+          const jsonString = JSON.stringify(dataUser)
+          localStorage.setItem('firebase', jsonString)
+          commit('getLogin', dataUser)
+          resolve()
+        })
+        .catch(err => console.log(err))
+      })
+    },
+    CheckLogin ({ commit }) {
+      if (localStorage.getItem('firebase')) {
+        commit('setLogin', true)
+      }
     }
   }
 })
