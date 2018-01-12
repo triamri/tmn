@@ -14,7 +14,7 @@
       <v-layout row wrap color="blue" style="position: fixed; bottom: 20%; width: 100%;">
         <v-flex xs12 v-if="!play">
           <div class="text-xs-center" id="fixed">
-            <v-btn :color="newColor" light id="btn-touch" @click="addPlayer($route.params.id)" ><h3>Join Room</h3></v-btn>
+            <v-btn :color="newColor" light id="btn-touch" @click="onJoin" ><h3>Join Room</h3></v-btn>
           </div>
         </v-flex>
         <v-flex xs12 v-else>
@@ -66,8 +66,10 @@ export default {
       this.$router.push({ name: 'Home', params: { id: this.$route.params.id } })
     },
     onJoin () {
+      this.addPlayer(this.$route.params.id)
       this.play = true
-    }
+    },
+
   },
   created () {
     this.getRoom()

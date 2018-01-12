@@ -96,7 +96,7 @@ export default {
           self.hide = true
           for(let i = 1; i <= this.players.length; i++ ){
             if (this.players[i].touch > this.players[0].touch){
-              console.log(this.players[i])
+              console.log('data '+ this.players[i])
               this.winner = this.players[i]
             }
           }
