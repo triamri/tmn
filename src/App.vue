@@ -26,10 +26,8 @@ export default {
     let self = this
     setInterval(function () {
       if (self.show === true) {
-        console.log(self.time)
         self.time--
         if (self.time === 0) {
-          console.log('HAPPY NEW YEAR!!')
           self.show = false
         }
       }

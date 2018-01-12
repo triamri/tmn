@@ -70,10 +70,8 @@ export default {
     let self = this
     setInterval(function () {
       if (self.active === true) {
-        console.log(self.time)
         self.time--
         if (self.time === 0) {
-          console.log('HAPPY NEW YEAR!!')
           self.active = false
           self.show = false
           self.hide = true
@@ -83,14 +81,11 @@ export default {
   },
   methods: {
     start () {
-      // console.log('masuk')
       let self = this
       self.startPlay = true
       setInterval(function () {
-        console.log(self.countDown)
         self.countDown--
         if (self.countDown === 0) {
-          console.log('"HAPPY NEW YEAR!!"')
           self.startPlay = false
           self.btnStart = false
           self.touch = true
@@ -99,8 +94,6 @@ export default {
       }, 1000)
     },
     countClick () {
-      // let random = Math.random()
-      // console.log(random)
       this.numClick += 1
       if (this.active === false) {
         this.active = true
