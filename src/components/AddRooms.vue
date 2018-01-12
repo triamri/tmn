@@ -11,7 +11,7 @@
                 required
               ></v-text-field>
               <v-btn
-                @click=""
+                @click="submitBtn()"
               >
                 Submit
               </v-btn>

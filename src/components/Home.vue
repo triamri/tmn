@@ -15,6 +15,8 @@
         <v-flex xs12 class="text-xs-center" style="color:white">
           <div class="centered">
             <h2>{{numClick}}</h2>
+            <h2>{{winner.name}}</h2>
+            <h4>You Winn !!!</h4>
             <h1>Play Again</h1>
             <div class="text-xs-center">
               <v-btn fab dark large color="primary" @click="logout">
@@ -79,7 +81,8 @@ export default {
         id: JSON.parse(localStorage.getItem('firebase')).id,
         key: this.$route.params.id
       },
-      player: {}
+      player: {},
+      winner: {}
     }
   },
   mounted () {
@@ -91,6 +94,12 @@ export default {
           self.active = false
           self.show = false
           self.hide = true
+          for(let i = 1; i <= this.players.length; i++ ){
+            if (this.players[i].touch > this.players[0].touch){
+              console.log(this.players[i])
+              this.winner = this.players[i]
+            }
+          }
         }
       }
     }, 1000)
@@ -125,14 +134,12 @@ export default {
       }, 1000)
     },
     countClick () {
-      // this.addTouch(this.setData)
-      // this.players.forEach(player => {
-      //   if (player.id == this.setData.id) {
-      //     this.player = player
-      //   }
-      // })
+      console.log(this.setData)
+      this.addTouch(this.setData)
+      
       // this.numClick = this.player.touch 
-      // console.log(this.numClick)
+      console.log(this.demage)
+      this.numClick = this.demage
       if (this.active === false){
         this.active = true
       }
@@ -152,7 +159,8 @@ export default {
     ...mapState([
       'dataLogin',
       'isLogin',
-      'players'
+      'players',
+      'demage'
     ])
   },
   created () {
