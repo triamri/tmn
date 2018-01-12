@@ -23,15 +23,25 @@
       <v-layout row wrap color="blue" style="position: fixed; bottom: 15%; width: 100%;">
         <v-flex xs4 offset-xs4 sm2 offset-sm5 class="text-xs-center" v-for="i in numClick" :key="i">
           <div :id="i">
-            <div style="background-color:blue; height:10px;">
+            <div style="background-color:blue; height:7px;">
             </div>
           </div>
         </v-flex>
         <v-flex xs12>
           <div class="text-xs-center" id="fixed">
-            <v-btn v-show="btnStart" color="orange" dark @click="start">Start</v-btn>
+            <v-btn v-show="btnStart" color="orange" id="btn-start" dark @click="start">Start</v-btn>
             <v-btn :color="newColor" light id="btn-touch" @click="countClick" v-show="touch">Touch Here</v-btn>
             <h2> You have <b>{{ time }}</b> secs left </h2>
+          </div>
+        </v-flex>
+        <v-flex xs6 class="text-xs-left">
+          <div id="fixed" style="padding: 0 10px;">
+            <p>Name: </p>
+          </div>
+        </v-flex>
+        <v-flex xs6 class="text-xs-right">
+          <div id="fixed" style="padding: 0 10px;">
+            <p>Test: </p>
           </div>
         </v-flex>
       </v-layout>
@@ -132,6 +142,14 @@ export default {
     border-radius: 50%;
     background-color: #2778f2;
   }
+  #btn-start {
+    border: none;
+    color: #fff;
+    width: 200px;
+    height: 200px;
+    transition: 0.3s;
+    border-radius: 50%;
+  }
   .flex-container {
     display: flex;
     flex-direction: column-reverse;
@@ -146,7 +164,7 @@ export default {
   }
   .centered {
     /* give it dimensions */
-    padding-top: 10em;
+    padding-top: 30vh;
   }
   .centered>h1 {
     font-size:50px;
