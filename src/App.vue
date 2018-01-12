@@ -28,7 +28,6 @@ export default {
       if (self.show === true) {
         self.time--
         if (self.time === 0) {
-          console.log('masuk')
           self.show = false
           // self.$router.push('/login')
         }
